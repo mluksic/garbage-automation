@@ -1,5 +1,5 @@
 *.local
-garbage
+garbage*
 
 
 # Local .terraform directories
