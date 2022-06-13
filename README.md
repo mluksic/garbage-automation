@@ -7,6 +7,7 @@ Send SMS notification the evening before garbage collection
 -   [Go](https://go.dev/doc/install)
 -   [AWS Lambda](https://aws.amazon.com/lambda/)
 -   [Twilio](https://www.twilio.com/sms)
+-   [Terraform](https://www.terraform.io/)
 
 ### Prerequisites
 
@@ -37,9 +38,21 @@ $ GOOS=linux GOARCH=amd64 go build -o garbage
 $ zip garbage.zip garbage garbage.csv
 ```
 
-### Build
+### Deploy
 
-Project uses [Terraform](https://www.terraform.io/) to deploy and provising AWS Lambda function, Triggers ect.
+Project uses [Terraform](https://www.terraform.io/) to deploy and provising AWS Lambda function, triggers ect.
+
+Basic TF commands:
+- `terraform plan` - compares current state and config file, and displays required provision steps
+- `terraform apply` - triggers execution plan (spins up AWS Lambda, creates rules, ect.)
+
+Lambda is currently being triggered every workday (MON - FRI) at 6pm UTC.
+
+### Test
+
+When Lambda function has been successfuly deployed to AWS, run this command:
+`aws lambda invoke --function-name garbageAutomation response.json`
+
 
 ## Authors
 
