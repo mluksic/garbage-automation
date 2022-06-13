@@ -1,2 +1,6 @@
 *.local
 garbage
+
+
+# Local .terraform directories
+**/.terraform/*
