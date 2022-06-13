@@ -51,7 +51,8 @@ Lambda is currently being triggered every workday (MON - FRI) at 6pm UTC.
 ### Test
 
 When Lambda function has been successfuly deployed to AWS, run this command:
-`aws lambda invoke --function-name garbageAutomation response.json`
+
+- `aws lambda invoke --function-name garbageAutomation response.json`
 
 
 ## Authors
