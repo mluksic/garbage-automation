@@ -2,16 +2,14 @@ package main
 
 import (
 	"encoding/csv"
-	"encoding/json"
 	"fmt"
 	"log"
+	"net/smtp"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/aws/aws-lambda-go/lambda"
-	"github.com/joho/godotenv"
-	"github.com/twilio/twilio-go"
-	openapi "github.com/twilio/twilio-go/rest/api/v2010"
 )
 
 func main() {
@@ -25,7 +23,17 @@ func garbageAutomation() {
 		log.Fatal("There was an error reading CSV file")
 	}
 
+	todayGarbagePickups := getTodayGarbagePickups(garbagePickups)
+
+	if len(todayGarbagePickups) > 0 {
+		sendEmail(todayGarbagePickups)
+	}
+}
+
+func getTodayGarbagePickups(garbagePickups [][]string) []string {
+	var todayGarbagePickups []string
 	currentDate := time.Now()
+
 	for _, p := range garbagePickups {
 		date, err := time.Parse("2006-01-02", p[1])
 
@@ -34,9 +42,11 @@ func garbageAutomation() {
 		}
 
 		if currentDate.Day()+1 == date.Day() && currentDate.Month() == date.Month() {
-			sendSMS(p[0])
+			todayGarbagePickups = append(todayGarbagePickups, p[0])
 		}
 	}
+
+	return todayGarbagePickups
 }
 
 func readFile(csvFile string) ([][]string, error) {
@@ -65,6 +75,7 @@ func readFile(csvFile string) ([][]string, error) {
 	return garbagePickups, nil
 }
 
+/*
 func sendSMS(msg string) {
 
 	env := os.Getenv("APP_ENV")
@@ -95,4 +106,26 @@ func sendSMS(msg string) {
 		response, _ := json.Marshal(*resp)
 		fmt.Println("Response: " + string(response))
 	}
+}*/
+
+func sendEmail(garbagePickups []string) {
+	from := os.Getenv("FROM_EMAIL")
+	password := os.Getenv("APP_PASSWORD")
+	receivers := []string{"luksic.miha@gmail.com"}
+
+	smtpHost := "smtp.gmail.com"
+	smtpPort := "587"
+
+	subject := "smeti"
+	todayGarbagePickups := strings.Join(garbagePickups, ", ")
+	message := []byte(fmt.Sprintf("Subject: %s \n\n %s\n", subject, todayGarbagePickups))
+
+	auth := smtp.PlainAuth("", from, password, smtpHost)
+
+	err := smtp.SendMail(smtpHost+":"+smtpPort, auth, from, receivers, message)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+
+	fmt.Println("Email Sent Successfully!")
 }
