@@ -81,9 +81,9 @@ func sendSMS(msg string) {
 	env := os.Getenv("APP_ENV")
 
 	if env == "" || env == "development" {
-		err := godotenv.Load(".env.local")
+		err := godotenv.Load(".env.example.local")
 		if err != nil {
-			log.Fatal("There was an error loading .env file")
+			log.Fatal("There was an error loading .env.example file")
 		}
 	}
 
@@ -111,7 +111,7 @@ func sendSMS(msg string) {
 func sendEmail(garbagePickups []string) {
 	from := os.Getenv("FROM_EMAIL")
 	password := os.Getenv("APP_PASSWORD")
-	receivers := []string{"luksic.miha@gmail.com"}
+	receivers := []string{os.Getenv("EMAIL_RECEIVERS")}
 
 	smtpHost := "smtp.gmail.com"
 	smtpPort := "587"
