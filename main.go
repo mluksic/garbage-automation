@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/csv"
 	"fmt"
+	"github.com/aws/aws-lambda-go/lambda"
 	"log"
 	"net/smtp"
 	"os"
