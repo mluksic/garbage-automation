@@ -1,12 +1,13 @@
 # Garbage notifier
 
-Send SMS notification the evening before garbage collection
+Send email/SMS notification the evening before garbage collection
 
 ## Dependencies
 
 -   [Go](https://go.dev/doc/install)
 -   [AWS Lambda](https://aws.amazon.com/lambda/)
--   [Twilio](https://www.twilio.com/sms)
+-   Gmail
+-   (Optional) [Twilio](https://www.twilio.com/sms)
 -   [Terraform](https://www.terraform.io/)
 
 ### Prerequisites
@@ -49,10 +50,10 @@ $ cp example.tfvars secret.tfvars
 ```
 
 Basic TF commands:
-- `terraform plan --var-file="secret.tfvars` - compares current state and config file, and displays required provision steps
-- `terraform apply --var-file="secret.tfvars` - triggers execution plan (spins up AWS Lambda, creates rules, ect.)
+- `terraform plan --var-file="secret.tfvars"` - compares current state and config file, and displays required provision steps
+- `terraform apply --var-file="secret.tfvars"` - triggers execution plan (spins up AWS Lambda, creates rules, ect.)
 
-Lambda is currently being triggered every workday (MON - FRI) at 6pm UTC.
+Lambda is triggered every workday (MON - FRI) at 6pm UTC.
 
 ### Test
 
