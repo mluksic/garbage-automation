@@ -9,8 +9,6 @@ import (
 	"os"
 	"strings"
 	"time"
-
-	"github.com/aws/aws-lambda-go/lambda"
 )
 
 func main() {
