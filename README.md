@@ -42,9 +42,15 @@ $ zip garbage.zip garbage garbage.csv
 
 Project uses [Terraform](https://www.terraform.io/) to deploy and provising AWS Lambda function, triggers ect.
 
+Create `secret.tfvars` and fill it with your variables
+```
+$ cd tf
+$ cp example.tfvars secret.tfvars
+```
+
 Basic TF commands:
-- `terraform plan` - compares current state and config file, and displays required provision steps
-- `terraform apply` - triggers execution plan (spins up AWS Lambda, creates rules, ect.)
+- `terraform plan --var-file="secret.tfvars` - compares current state and config file, and displays required provision steps
+- `terraform apply --var-file="secret.tfvars` - triggers execution plan (spins up AWS Lambda, creates rules, ect.)
 
 Lambda is currently being triggered every workday (MON - FRI) at 6pm UTC.
 
