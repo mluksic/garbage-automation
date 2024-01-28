@@ -50,7 +50,6 @@ func getTodayGarbagePickups(garbagePickups [][]string) []string {
 
 func readFile(csvFile string) ([][]string, error) {
 	f, err := os.Open(csvFile)
-
 	if err != nil {
 		log.Fatal("There was an error reading CSV file")
 	}
@@ -58,14 +57,12 @@ func readFile(csvFile string) ([][]string, error) {
 	defer f.Close()
 
 	r := csv.NewReader(f)
-
 	if _, err := r.Read(); err != nil {
 		log.Fatal("there was an error reading first line in CSV file")
 		return [][]string{}, err
 	}
 
 	garbagePickups, err := r.ReadAll()
-
 	if err != nil {
 		log.Fatal("There was an error reading all CSV values")
 		return [][]string{}, err
