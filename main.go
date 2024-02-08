@@ -107,8 +107,7 @@ func sendSMS(msg string) {
 func sendEmail(garbagePickups []string) {
 	from := os.Getenv("FROM_EMAIL")
 	password := os.Getenv("APP_PASSWORD")
-	receivers := []string{os.Getenv("EMAIL_RECEIVERS")}
-
+	receivers := strings.Split(os.Getenv("EMAIL_RECEIVERS"), ",")
 	smtpHost := "smtp.gmail.com"
 	smtpPort := "587"
 
