@@ -42,10 +42,6 @@ resource "aws_lambda_function" "garbageAutomation" {
   environment {
     variables = {
       APP_ENV = var.APP_ENV
-      ACCOUNT_SID=var.ACCOUNT_SID
-      AUTH_TOKEN=var.AUTH_TOKEN
-      PHONE_NUMBER=var.PHONE_NUMBER
-      SERVICE_ID=var.SERVICE_ID
       APP_PASSWORD=var.APP_PASSWORD
       FROM_EMAIL=var.FROM_EMAIL
       EMAIL_RECEIVERS=var.EMAIL_RECEIVERS
