@@ -53,10 +53,11 @@ func main() {
 func garbageAutomation() {
 	garbagePickups, err := readFile("garbage.csv")
 	if err != nil {
-		log.Fatal("There was an error reading CSV file")
+		fmt.Printf("there was an error reading file: %v", err)
 	}
 
 	todayGarbagePickups := getTodayGarbagePickups(garbagePickups)
+	// only send email notifications for now
 	notifier := NewEmailNotifier()
 
 	if len(todayGarbagePickups) > 0 {
@@ -66,12 +67,12 @@ func garbageAutomation() {
 			fmt.Printf("%v", err)
 		}
 
-		fmt.Println("Notification sent Successfully!")
+		fmt.Println("Notification sent successfully")
 	}
 }
 
 func getTodayGarbagePickups(garbagePickups [][]string) []string {
-	var todayGarbagePickups []string
+	todayGarbagePickups := make([]string, 5)
 	currentDate := time.Now()
 
 	for _, p := range garbagePickups {
@@ -89,23 +90,20 @@ func getTodayGarbagePickups(garbagePickups [][]string) []string {
 	return todayGarbagePickups
 }
 
-func readFile(csvFile string) ([][]string, error) {
-	f, err := os.Open(csvFile)
+func readFile(name string) ([][]string, error) {
+	f, err := os.Open(name)
 	if err != nil {
-		log.Fatal("There was an error reading CSV file")
+		return [][]string{}, err
 	}
-
 	defer f.Close()
 
 	r := csv.NewReader(f)
 	if _, err := r.Read(); err != nil {
-		log.Fatal("there was an error reading first line in CSV file")
 		return [][]string{}, err
 	}
 
 	garbagePickups, err := r.ReadAll()
 	if err != nil {
-		log.Fatal("There was an error reading all CSV values")
 		return [][]string{}, err
 	}
 
