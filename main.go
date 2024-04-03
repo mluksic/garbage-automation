@@ -11,21 +11,62 @@ import (
 	"time"
 )
 
+type Notifier interface {
+	Notify(msg string) error
+}
+
+type EmailNotifier struct {
+	fromEmail string
+	password  string
+	smtpHost  string
+	smtpPort  string
+}
+
+func NewEmailNotifier() *EmailNotifier {
+	return &EmailNotifier{
+		fromEmail: os.Getenv("FROM_EMAIL"),
+		password:  os.Getenv("APP_PASSWORD"),
+		smtpHost:  "smtp.gmail.com",
+		smtpPort:  "587",
+	}
+}
+
+func (n *EmailNotifier) Notify(msg string) error {
+	message := []byte(fmt.Sprintf("Subject: smeti \n\n %s\n", msg))
+	receivers := strings.Split(os.Getenv("EMAIL_RECEIVERS"), ",")
+
+	auth := smtp.PlainAuth("", n.fromEmail, n.password, n.smtpHost)
+	addr := fmt.Sprintf("%s:%s", n.smtpHost, n.smtpPort)
+
+	err := smtp.SendMail(addr, auth, n.fromEmail, receivers, message)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func main() {
 	lambda.Start(garbageAutomation)
 }
 
 func garbageAutomation() {
 	garbagePickups, err := readFile("garbage.csv")
-
 	if err != nil {
 		log.Fatal("There was an error reading CSV file")
 	}
 
 	todayGarbagePickups := getTodayGarbagePickups(garbagePickups)
+	notifier := NewEmailNotifier()
 
 	if len(todayGarbagePickups) > 0 {
-		sendEmail(todayGarbagePickups)
+		msg := strings.Join(todayGarbagePickups, ", ")
+		err := notifier.Notify(msg)
+		if err != nil {
+			fmt.Printf("%v", err)
+		}
+
+		fmt.Println("Notification sent Successfully!")
 	}
 }
 
@@ -69,58 +110,4 @@ func readFile(csvFile string) ([][]string, error) {
 	}
 
 	return garbagePickups, nil
-}
-
-/*
-func sendSMS(msg string) {
-
-	env := os.Getenv("APP_ENV")
-
-	if env == "" || env == "development" {
-		err := godotenv.Load(".env.example.local")
-		if err != nil {
-			log.Fatal("There was an error loading .env.example file")
-		}
-	}
-
-	accountSid := os.Getenv("ACCOUNT_SID")
-	authToken := os.Getenv("AUTH_TOKEN")
-	client := twilio.NewRestClientWithParams(twilio.ClientParams{
-		Username: accountSid,
-		Password: authToken,
-	})
-
-	params := &openapi.CreateMessageParams{}
-	params.SetTo(os.Getenv("PHONE_NUMBER"))
-	params.SetBody(msg + " kanta")
-	params.SetMessagingServiceSid(os.Getenv("SERVICE_ID"))
-	resp, err := client.Api.CreateMessage(params)
-
-	if err != nil {
-		fmt.Println(err.Error())
-	} else {
-		response, _ := json.Marshal(*resp)
-		fmt.Println("Response: " + string(response))
-	}
-}*/
-
-func sendEmail(garbagePickups []string) {
-	from := os.Getenv("FROM_EMAIL")
-	password := os.Getenv("APP_PASSWORD")
-	receivers := strings.Split(os.Getenv("EMAIL_RECEIVERS"), ",")
-	smtpHost := "smtp.gmail.com"
-	smtpPort := "587"
-
-	subject := "smeti"
-	todayGarbagePickups := strings.Join(garbagePickups, ", ")
-	message := []byte(fmt.Sprintf("Subject: %s \n\n %s\n", subject, todayGarbagePickups))
-
-	auth := smtp.PlainAuth("", from, password, smtpHost)
-
-	err := smtp.SendMail(smtpHost+":"+smtpPort, auth, from, receivers, message)
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-
-	fmt.Println("Email Sent Successfully!")
 }
