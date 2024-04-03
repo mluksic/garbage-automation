@@ -1,45 +1,43 @@
-# Garbage notifier
+# Garbage pickup notification system
 
-Send email/SMS notification the evening before garbage collection
+Send garbage pickup alerts to users via Email/SMS
 
 ## Dependencies
 
--   [Go](https://go.dev/doc/install)
+-   [Go v1.18+](https://go.dev/doc/install)
 -   [AWS Lambda](https://aws.amazon.com/lambda/)
--   Gmail
--   (Optional) [Twilio](https://www.twilio.com/sms)
 -   [Terraform](https://www.terraform.io/)
 
-### Prerequisites
+## Prerequisites
 
 Download and install:
 
 -   [Go](https://go.dev/doc/install)
--   [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) - optional (TerraForm)
+-   [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) - optional (for testing Lambda function) 
 
-### Running the app
+## Usage
 
-1. Create `garbage.csv` file with garbage collection schedule
-2. Change environment variables
-3. Run command below to start the project
+1. Create `garbage.csv` file with garbage pickup schedule
+2. Change env variables to fit your
+3. Run the command below to start the project
 
 ```bash
 $ go run main.go
 ```
 
-### Build
+## Build
 
 1. Build binary:
 ```bash
 $ GOOS=linux GOARCH=amd64 go build -o garbage
 ```
 
-2. Create ZIP file (binary + CSV):
+2. Create ZIP file (binary + CSV) for AWS Lambda
 ```bash
 $ zip garbage.zip garbage garbage.csv
 ```
 
-### Deploy
+## Deploy
 
 Project uses [Terraform](https://www.terraform.io/) to deploy and provising AWS Lambda function, triggers ect.
 
@@ -55,12 +53,11 @@ Basic TF commands:
 
 Lambda is triggered every workday (MON - FRI) at 6pm UTC.
 
-### Test
+## Test
 
-When Lambda function has been successfuly deployed to AWS, run this command:
+When Lambda function has been successfully deployed to AWS, run this command:
 
 - `aws lambda invoke --function-name garbageAutomation response.json`
-
 
 ## Authors
 
