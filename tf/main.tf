@@ -45,6 +45,8 @@ resource "aws_lambda_function" "garbageAutomation" {
       APP_PASSWORD=var.APP_PASSWORD
       FROM_EMAIL=var.FROM_EMAIL
       EMAIL_RECEIVERS=var.EMAIL_RECEIVERS
+      SMTP_HOST=var.SMTP_HOST
+      SMTP_PORT=var.SMTP_PORT
     }
   }
 }

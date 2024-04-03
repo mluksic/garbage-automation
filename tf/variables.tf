@@ -18,3 +18,13 @@ variable "EMAIL_RECEIVERS" {
   type        = string
   sensitive   = true
 }
+variable "SMTP_HOST" {
+  description = "SMTP host for the email inbox"
+  type        = string
+  sensitive   = false
+}
+variable "SMTP_PORT" {
+  description = "SMTP port for the email inbox"
+  type        = string
+  sensitive   = false
+}
