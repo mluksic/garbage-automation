@@ -72,7 +72,7 @@ func garbageAutomation() {
 }
 
 func getTodayGarbagePickups(garbagePickups [][]string) []string {
-	todayGarbagePickups := make([]string, 5)
+	todayGarbagePickups := make([]string, 0, 5)
 	currentDate := time.Now()
 
 	for _, p := range garbagePickups {
