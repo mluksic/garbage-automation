@@ -3,10 +3,10 @@ tidy:
 	@go fmt
 
 build:
-	@go build -o garbage
+	GOOS=linux GOARCH=amd64 go build -o garbage
 
 package: build
-	@zip garbage.zip garbage garbage.csv
+	zip garbage.zip garbage garbage.csv
 
 test:
 	@go test -v ./...
