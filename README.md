@@ -62,3 +62,5 @@ When Lambda function has been successfully deployed to AWS, run this command:
 ## Authors
 
 👤 **Miha Luksic**
+
+(a very important hotfix)
